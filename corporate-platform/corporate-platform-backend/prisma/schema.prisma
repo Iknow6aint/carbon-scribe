@@ -128,6 +128,7 @@ model Credit {
   auctions     Auction[]
   portfolioHoldings  PortfolioHolding[] @relation("PortfolioHolding")
   portfolioEntries   PortfolioEntry[] @relation("PortfolioEntry")
+  availabilityLogs    CreditAvailabilityLog[]
 
   // Blockchain
   assetCode     String?
@@ -629,6 +630,23 @@ model PortfolioEntry {
   @@index([portfolioId])
   @@index([creditId])
   @@map("portfolio_entries")
+}
+
+model CreditAvailabilityLog {
+  id            String   @id @default(cuid())
+  creditId      String
+  credit        Credit   @relation(fields: [creditId], references: [id])
+  changedBy     String?  // userId or system
+  changeType    String   // decrement, increment, reserve, release, retire
+  amount        Int
+  previousAmount Int
+  newAmount     Int
+  reason        String?
+  createdAt     DateTime @default(now())
+
+  @@index([creditId])
+  @@index([createdAt])
+  @@map("credit_availability_logs")
 }
 
 // ==========================================

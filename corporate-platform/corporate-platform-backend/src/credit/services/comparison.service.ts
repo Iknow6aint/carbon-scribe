@@ -6,8 +6,16 @@ import { ComparisonResult } from '../interfaces/credit-comparison.interface';
 export class ComparisonService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async compare(projectIds: string[]): Promise<ComparisonResult> {
-    const credits = await this.prisma.credit.findMany({ where: { projectId: { in: projectIds } }, include: { project: true } });
+  async compare(
+    projectIds: string[],
+    companyId?: string,
+  ): Promise<ComparisonResult> {
+    const where: any = { projectId: { in: projectIds } };
+    if (companyId) where.project = { companyId };
+    const credits = await this.prisma.credit.findMany({
+      where,
+      include: { project: true },
+    });
 
     const points = credits.map((c) => ({
       projectId: c.projectId,
@@ -19,8 +27,12 @@ export class ComparisonService {
       vintage: c.vintage,
     }));
 
-    const avgPrice = points.length ? points.reduce((s, p) => s + p.pricePerTon, 0) / points.length : 0;
-    const avgScore = points.length ? points.reduce((s, p) => s + p.dynamicScore, 0) / points.length : 0;
+    const avgPrice = points.length
+      ? points.reduce((s, p) => s + p.pricePerTon, 0) / points.length
+      : 0;
+    const avgScore = points.length
+      ? points.reduce((s, p) => s + p.dynamicScore, 0) / points.length
+      : 0;
 
     return { points, avgPrice, avgScore };
   }

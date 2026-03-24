@@ -9,6 +9,7 @@ describe('QualityService', () => {
   beforeEach(async () => {
     prisma = {
       credit: {
+        findFirst: jest.fn(),
         findUnique: jest.fn(),
       },
     };
@@ -21,7 +22,7 @@ describe('QualityService', () => {
   });
 
   it('should compute dynamic score correctly', async () => {
-    prisma.credit.findUnique.mockResolvedValueOnce({
+    prisma.credit.findFirst.mockResolvedValueOnce({
       id: 'c1',
       verificationScore: 80,
       additionalityScore: 70,

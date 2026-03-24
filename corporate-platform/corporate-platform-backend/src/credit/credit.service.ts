@@ -15,33 +15,41 @@ export class CreditService {
     private readonly comparison: ComparisonService,
   ) {}
 
-  list(query) {
-    return this.listing.list(query);
+  list(query, companyId?: string) {
+    return this.listing.list(query, companyId);
   }
 
-  getById(id: string) {
-    return this.details.getById(id);
+  getById(id: string, companyId?: string) {
+    return this.details.getById(id, companyId);
   }
 
-  getQuality(id: string) {
-    return this.quality.getQualityBreakdown(id);
+  getQuality(id: string, companyId?: string) {
+    return this.quality.getQualityBreakdown(id, companyId);
   }
 
-  listAvailable(page: number, limit: number) {
-    return this.availability.listAvailable(page, limit);
+  listAvailable(page: number, limit: number, companyId?: string) {
+    return this.availability.listAvailable(page, limit, companyId);
   }
 
-  updateStatus(id: string, status: string, availableAmount?: number) {
-    return this.availability.updateStatus(id, status, availableAmount);
+  updateStatus(
+    id: string,
+    status: string,
+    availableAmount?: number,
+    companyId?: string,
+  ) {
+    return this.availability.updateStatus(
+      id,
+      status,
+      availableAmount,
+      companyId,
+    );
   }
 
-  compare(projectIds: string[]) {
-    return this.comparison.compare(projectIds);
+  compare(projectIds: string[], companyId?: string) {
+    return this.comparison.compare(projectIds, companyId);
   }
 
   async stats() {
-    const l = await this.listing.list({ page: 1, limit: 1 });
-    const totalAvailable = await this.listing.list({ page: 1, limit: 1 }).then(() => 0);
     // minimal stats for now
     return { totalAvailable: 0, avgPrice: 0 };
   }

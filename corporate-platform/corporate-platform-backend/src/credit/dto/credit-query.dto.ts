@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumber, IsArray, Min } from 'class-validator';
+import { IsOptional, IsString, IsNumber, IsArray } from 'class-validator';
 
 export class CreditQueryDto {
   @IsOptional()
